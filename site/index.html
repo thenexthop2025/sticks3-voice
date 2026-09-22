@@ -1,0 +1,27 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="color-scheme" content="dark">
+    <title>Install StickS3 Voice</title>
+    <script type="module" src="https://unpkg.com/esp-web-tools@10/dist/web/install-button.js?module"></script>
+    <style>
+      :root { font-family: system-ui, sans-serif; color: #eef3ff; background: #0b1020; }
+      body { min-height: 100vh; margin: 0; display: grid; place-items: center; }
+      main { width: min(36rem, calc(100% - 2rem)); text-align: center; padding: 2.5rem 1.5rem; border: 1px solid #283451; border-radius: 1.25rem; background: #121a30; box-shadow: 0 1rem 3rem #0006; }
+      h1 { margin-top: 0; }
+      p { color: #bdc9e5; line-height: 1.6; }
+      esp-web-install-button { display: inline-block; margin: 1rem 0; }
+      a { color: #7bc8ff; }
+    </style>
+  </head>
+  <body>
+    <main>
+      <h1>StickS3 Voice</h1>
+      <p>ESPHome voice-assistant firmware for the M5Stack StickS3 K150 / StickS3.</p>
+      <esp-web-install-button manifest="manifest.json"></esp-web-install-button>
+      <p>Use a desktop Chromium-based browser and a USB data cable. After installation, configure Wi-Fi when prompted.</p>
+    </main>
+  </body>
+</html>
