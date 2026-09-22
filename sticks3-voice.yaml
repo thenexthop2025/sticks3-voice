@@ -755,27 +755,6 @@ display:
               batt_color
             );
           }
-
-          it.printf(
-            130,
-            6,
-            id(font_tiny),
-            CANDY_WHITE,
-            TextAlign::TOP_RIGHT,
-            "%.0f%%",
-            batt
-          );
-
-        } else {
-
-          it.print(
-            130,
-            6,
-            id(font_tiny),
-            CANDY_LAVENDER,
-            TextAlign::TOP_RIGHT,
-            "--%"
-          );
         }
 
 
@@ -1599,28 +1578,6 @@ display:
             batt_color
           );
         }
-
-        // percentage
-        it.printf(
-          130,
-          19,
-          id(font_tiny),
-          batt_color,
-          TextAlign::TOP_RIGHT,
-          "%.0f%%",
-          batt
-        );
-
-      } else {
-
-        it.print(
-          130,
-          10,
-          id(font_tiny),
-          MUTED,
-          TextAlign::TOP_RIGHT,
-          "--%"
-        );
       }
 
 
