@@ -14,11 +14,11 @@
 - 135 × 240 彩色 LCD，显示糖果色动态机器人
 - 显示正在聆听、思考和播报等语音状态
 - 在屏幕上显示语音识别文本和助手回复
-- 显示电池状态图标和 Wi-Fi 信号
+- 屏幕显示电池状态图标和 Wi-Fi 信号
 - 在 Home Assistant 中提供电池百分比、电池电压和 Wi-Fi 信号传感器
 - 支持正面按键启动语音助手
 - 回答结束后自动返回机器人待机画面
-- 可通过 Improv Serial 或备用配网页面完成 Wi-Fi 设置
+- 支持通过 USB 或备用配网页面配置 Wi-Fi
 - 设备联网后支持 OTA 更新
 - 自动在设备名后加入 MAC 地址后缀，避免多台设备重名
 
@@ -36,26 +36,9 @@
 - 正面按键
 - 250 mAh 电池
 
-StickS3 还带有红外收发、IMU 和扩展接口，但当前固件没有启用这些功能。Bluetooth Proxy 也有意保持关闭，以减少它对 Wi-Fi 和语音功能的影响。
+StickS3 还带有红外收发、IMU 和扩展接口，但当前固件没有启用这些功能。
 
-## 隐私与公开分享
-
-本仓库不包含：
-
-- 个人 Wi-Fi 名称或密码
-- 固定的 Home Assistant API 加密密钥
-- Home Assistant 访问令牌
-- 其他属于项目作者的私人凭据
-
-每位用户都应在刷机后配置自己的 Wi-Fi，并将设备接入自己的 Home Assistant。
-
-如果你修改或派生本项目，请勿把以下内容提交到公开仓库：
-
-- `secrets.yaml`
-- Wi-Fi 密码
-- Home Assistant 访问令牌
-- API 密钥
-- 其他个人或家庭网络信息
+Bluetooth Proxy 也有意保持关闭，以减少它对 Wi-Fi 和语音功能的影响。
 
 ## 网页一键安装
 
@@ -65,12 +48,12 @@ StickS3 还带有红外收发、IMU 和扩展接口，但当前固件没有启�
    [StickS3 Voice 网页安装器](https://thenexthop2025.github.io/sticks3-voice/)
 2. 使用支持数据传输的 USB 线把 StickS3 连接到电脑。
 3. 点击 **Connect**。
-4. 选择 StickS3 对应的 USB 串口。
+4. 在串口列表中选择 StickS3 对应的 USB 串口。
 5. 按照页面提示安装固件。
 6. 在刷写和校验完成前保持设备连接。
 7. 安装完成后重新启动设备并配置 Wi-Fi。
 
-> 网页安装会覆盖设备当前的固件。请勿选择“擦除设备”，除非确实需要完全清空设备。
+网页安装会覆盖设备当前的固件，并可能清除原来的网络和设备设置。刷机前请先备份需要保留的配置。
 
 ## 直接下载固件
 
@@ -78,22 +61,14 @@ StickS3 还带有红外收发、IMU 和扩展接口，但当前固件没有启�
 
 [下载 firmware.factory.bin](https://thenexthop2025.github.io/sticks3-voice/firmware.factory.bin)
 
-这个文件是适用于首次完整刷机的 factory 固件。
+这是适用于首次完整刷机的 factory 固件，可从地址 `0x0` 写入。
 
 ## 浏览器要求
 
-网页刷机依赖 Web Serial，请使用最新版桌面端 Chromium 浏览器，例如：
+建议使用最新版桌面浏览器：
 
 - Google Chrome
 - Microsoft Edge
-
-以下浏览器或设备通常不能使用这个网页刷机流程：
-
-- Safari
-- Firefox
-- 大多数手机和平板浏览器
-
-安装页面必须通过 HTTPS 提供，GitHub Pages 会自动满足这个要求。
 
 如果串口列表中没有出现 StickS3：
 
@@ -101,36 +76,62 @@ StickS3 还带有红外收发、IMU 和扩展接口，但当前固件没有启�
 2. 尽量直接连接电脑，不要经过扩展坞。
 3. 关闭可能正在占用串口的程序。
 4. 重新插拔设备并刷新网页。
-5. 如需进入下载模式，连接 USB 后长按设备侧键约 2 秒，看到内部绿色指示灯闪烁后松开。
+5. 如需进入下载模式，连接 USB 后长按设备侧键约 2 秒。
+6. 看到设备内部绿色指示灯闪烁后松开侧键。
+7. 重新点击网页上的 **Connect**。
 
-不要选择 Mac 自带的 Bluetooth、debug-console 或 wlan-debug 端口。StickS3 通常会显示为新的 USB、Espressif 或 `cu.usbmodem` 端口。
+不要选择 Mac 自带的以下端口：
 
-## 首次配网
+```text
+cu.Bluetooth-Incoming-Port
+cu.debug-console
+cu.wlan-debug
+```
 
-刷机完成后，可以通过以下方式配置 Wi-Fi：
+StickS3 通常会显示为新出现的 USB、Espressif 或 `cu.usbmodem` 端口。
 
-- 使用支持 Improv Serial 的客户端通过 USB 配网。
-- 连接设备临时创建的 **StickS3 Voice Setup** Wi-Fi，然后在弹出的配网页面中输入自己的 Wi-Fi 名称和密码。
+## 首次配置 Wi-Fi
 
-这个热点只用于初次配网。设备成功连接你的 Wi-Fi 后，会使用你配置的网络正常运行。
+固件安装完成后，先保持 StickS3 与电脑的 USB 连接。
 
-如果配网页面没有自动弹出，可以在连接 **StickS3 Voice Setup** 后尝试访问：
+安装工具可能会自动显示 Wi-Fi 配置选项。如果出现该选项，请选择自己的 Wi-Fi，并输入密码。
+
+如果没有出现 Wi-Fi 配置选项：
+
+1. 等待 StickS3 启动。
+2. 打开手机或电脑的 Wi-Fi 设置。
+3. 找到并连接：
+
+```text
+StickS3 Voice Setup
+```
+
+4. 该临时热点目前没有设置密码。
+5. 连接后，配网页面通常会自动打开。
+6. 在页面中选择自己的 Wi-Fi，并输入密码。
+
+如果配网页面没有自动打开，请在浏览器中访问：
 
 ```text
 http://192.168.4.1/
 ```
 
+设备成功连接家庭 Wi-Fi 后，会使用你配置的网络正常运行。
+
+`StickS3 Voice Setup` 是设备无法连接其他 Wi-Fi 时使用的备用配网热点，不是日常使用的网络。
+
 ## 接入 Home Assistant
 
 1. 确保 StickS3 与 Home Assistant 位于可以互相访问的网络中。
 2. 在 Home Assistant 中打开 **设置 → 设备与服务**。
-3. 接受自动发现的 ESPHome 设备。
-4. 如果没有自动发现，选择 **添加集成 → ESPHome**。
-5. 输入 StickS3 的主机名或 IP 地址。
-6. 按照界面完成 ESPHome 配对。
-7. 为设备设置要使用的 Home Assistant Assist 管线和语言。
+3. 查看是否出现自动发现的 ESPHome 设备。
+4. 如果已经发现，点击相应提示完成添加。
+5. 如果没有自动发现，选择 **添加集成 → ESPHome**。
+6. 输入 StickS3 的主机名或 IP 地址。
+7. 按照界面完成 ESPHome 设备添加。
+8. 为设备选择要使用的 Home Assistant Assist 管线和语言。
 
-设备主机名通常以 `sticks3-voice` 开头。由于固件启用了 MAC 地址后缀，不同用户和不同设备不会轻易发生名称冲突。
+设备主机名通常以 `sticks3-voice` 开头。固件启用了 MAC 地址后缀，因此每台设备的完整主机名可能不同。
 
 固件中没有内置属于项目作者的 Home Assistant API 密钥。
 
@@ -147,7 +148,7 @@ http://192.168.4.1/
 - Thinking：正在处理
 - Speaking：正在播报
 
-回答结束后，设备会自动返回机器人待机画面。
+屏幕还会显示语音识别文本和 Home Assistant 的回复。回答结束后，设备会自动返回机器人待机画面。
 
 ## 本地编译和刷机
 
@@ -163,7 +164,7 @@ esphome run sticks3-voice.yaml
 esphome compile sticks3-voice.yaml
 ```
 
-本地编译生成的文件位于 `.esphome` 构建目录中。
+本地构建结果位于 `.esphome` 构建目录中。
 
 首次刷机可以使用 USB。设备联网后，也可以把它接管到自己的 ESPHome Dashboard，并使用 OTA 方式维护后续配置。
 
@@ -185,6 +186,8 @@ esphome compile sticks3-voice.yaml
 https://thenexthop2025.github.io/sticks3-voice/
 ```
 
+普通用户不需要操作 GitHub，也不需要自己运行 Actions。
+
 ## 项目文件说明
 
 | 路径 | 用途 |
@@ -194,14 +197,15 @@ https://thenexthop2025.github.io/sticks3-voice/
 | `site/index.html` | 浏览器一键安装页面 |
 | `site/manifest.json` | ESP Web Tools 固件清单 |
 | `.github/workflows/pages.yml` | 自动编译固件并发布 GitHub Pages |
-| `.gitignore` | 排除本地构建结果、私密配置和生成的固件 |
 | `README.md` | 英文说明 |
 | `README_zh-CN.md` | 简体中文说明 |
 
 ## 注意事项
 
 - GitHub Actions 工作流固定使用 ESPHome 2026.9.x，以便公开构建结果保持一致。
-- 刷机会替换设备当前的固件，请先备份需要保留的配置。
-- 进入下载模式或异常重启后，如果电池图标暂时消失，可以拔掉 USB、双击侧键完全关机，等待约 10 秒后再单击开机。
-- 电池百分比根据电压估算，不是精密的电量计读数。
-- 这是针对上图所示硬件的社区项目
+- 刷机会替换设备当前固件，请先备份需要保留的配置。
+- 屏幕只显示电池图标，不显示电池百分比。
+- 电池百分比和电池电压仍可在 Home Assistant 中查看。
+- 电池百分比根据电压估算，不是精密电量计读数。
+- 如果进入下载模式后电池图标消失，可以拔掉 USB、双击侧键完全关机，等待约 10 秒后再单击开机。
+- 这是针对上图所示硬件的社区项目，不是适用于其他 ESP32-S3 开发板的通用固件。
