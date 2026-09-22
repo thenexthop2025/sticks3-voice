@@ -2,72 +2,155 @@
 
 [English](README.md) | [简体中文](README_zh-CN.md)
 
-ESPHome voice-assistant firmware made specifically for the **M5Stack StickS3 K150 / StickS3**. It is not a generic ESP32-S3 firmware image; use it only with the matching StickS3 hardware.
+ESPHome voice-assistant firmware made specifically for the **M5Stack StickS3 K150 / StickS3**. This is not a generic ESP32-S3 firmware image and should only be installed on the matching StickS3 hardware.
 
 ![M5Stack StickS3 K150 hardware overview](docs/sticks3-hardware.png)
 
 ## Features
 
-- Home Assistant voice satellite with the `hey_jarvis` on-device wake word
+- Home Assistant voice satellite
+- On-device `hey_jarvis` wake word
 - Microphone and speaker support through the StickS3 ES8311 audio codec
 - 135 × 240 color LCD with an animated candy-colored robot
 - Listening, thinking, and speaking status screens
-- Speech transcript and assistant reply text on the display
-- Battery percentage, battery voltage, and Wi-Fi signal display
-- Front-button voice activation and automatic return to the idle screen
-- Wi-Fi setup through Improv Serial or the fallback captive portal
-- OTA updates after the device has joined the network
-- Unique device names through the MAC-address suffix
+- Speech transcript and assistant response text on the display
+- Battery status icon and Wi-Fi signal display
+- Battery percentage, battery voltage, and Wi-Fi signal sensors in Home Assistant
+- Voice activation using the front button
+- Automatic return to the robot screen after a completed response
+- Wi-Fi provisioning through Improv Serial or the fallback captive portal
+- OTA updates after the device joins the network
+- Unique device names using a MAC-address suffix
 
 ## Supported hardware
 
-This project targets the **M5Stack StickS3 K150 / StickS3** with an ESP32-S3-PICO-1-N8R8, 8 MB flash, 8 MB PSRAM, 1.14-inch ST7789P3 LCD, ES8311 codec, microphone, speaker, buttons, and 250 mAh battery.
+This project targets the **M5Stack StickS3 K150 / StickS3**, including:
 
-The board also contains infrared hardware, an IMU, and an expansion port, but this firmware does not currently enable those features. Bluetooth Proxy is also intentionally not enabled.
+- ESP32-S3-PICO-1-N8R8
+- 8 MB flash
+- 8 MB PSRAM
+- 1.14-inch 135 × 240 ST7789P3 color LCD
+- ES8311 audio codec
+- Built-in microphone
+- Built-in speaker
+- Front button
+- 250 mAh battery
+
+The StickS3 also includes infrared hardware, an IMU, and an expansion port, but this firmware does not currently enable those features. Bluetooth Proxy is intentionally disabled to reduce its possible impact on Wi-Fi and voice-assistant performance.
 
 ## Privacy and public sharing
 
-This repository contains no personal Wi-Fi credentials and no fixed Home Assistant API encryption key. Each user configures their own network after flashing and pairs the device with their own Home Assistant instance.
+This repository does not contain:
 
-Before publishing changes, do not add `secrets.yaml`, Wi-Fi passwords, Home Assistant tokens, API keys, or other personal data to the repository.
+- Personal Wi-Fi credentials
+- A fixed Home Assistant API encryption key
+- Home Assistant access tokens
+- Other private credentials belonging to the project author
 
-## Install from GitHub Pages
+Each user configures their own Wi-Fi after installation and pairs the device with their own Home Assistant instance.
 
-After this repository is pushed to GitHub and Pages is enabled with **GitHub Actions** as its source:
+If you modify or fork this project, do not commit the following information to a public repository:
 
-1. Open `https://<github-user>.github.io/sticks3-voice/`.
-2. Connect the StickS3 to the computer with a USB data cable.
-3. Select **Install**, choose the serial device, and confirm the installation.
-4. Keep the device connected until flashing and verification finish.
+- `secrets.yaml`
+- Wi-Fi passwords
+- Home Assistant access tokens
+- API keys
+- Other personal or home-network information
 
-The included workflow compiles `sticks3-voice.yaml`, locates `firmware.factory.bin`, builds the installer site, and deploys it to GitHub Pages on every push to `main`. The same workflow can also be started manually from the GitHub **Actions** tab.
+## Install from the web
+
+Regular users do not need to install ESPHome, download the source code, or create a GitHub repository.
+
+1. Open the [StickS3 Voice web installer](https://thenexthop2025.github.io/sticks3-voice/) using desktop Google Chrome or Microsoft Edge.
+2. Connect the StickS3 to the computer using a USB data cable.
+3. Select **Connect**.
+4. Choose the USB serial port belonging to the StickS3.
+5. Follow the instructions shown by the installer.
+6. Keep the device connected until flashing and verification are complete.
+7. Restart the device and configure Wi-Fi after installation.
+
+> Web installation replaces the firmware currently installed on the device. Do not select “Erase device” unless you intentionally want to remove all existing device data.
+
+## Download the compiled firmware
+
+Users who prefer another flashing tool can download the compiled firmware directly:
+
+[Download firmware.factory.bin](https://thenexthop2025.github.io/sticks3-voice/firmware.factory.bin)
+
+This is the factory image intended for a complete first-time installation.
 
 ## Browser requirements
 
-Web installation requires Web Serial. Use a current desktop Chromium-based browser such as Google Chrome or Microsoft Edge. Safari, Firefox, and most mobile browsers do not support this installation flow. The installer must be served over HTTPS (GitHub Pages does this automatically). If no serial device appears, check that the cable carries data, close other programs using the port, and reconnect the device.
+Web installation uses Web Serial. Use a current desktop Chromium-based browser, such as:
+
+- Google Chrome
+- Microsoft Edge
+
+The following browsers and devices generally cannot use this installation flow:
+
+- Safari
+- Firefox
+- Most mobile and tablet browsers
+
+The installer must be served over HTTPS. GitHub Pages provides HTTPS automatically.
+
+If the StickS3 does not appear in the serial-port list:
+
+1. Confirm that the USB cable supports data transfer and is not a charging-only cable.
+2. Connect directly to the computer when possible instead of using a hub.
+3. Close other applications that may be using the serial port.
+4. Reconnect the device and reload the installer.
+5. If download mode is required, connect USB and hold the side button for approximately two seconds. Release it when the internal green LED begins flashing.
+
+Do not select the built-in Bluetooth, debug-console, or wlan-debug ports shown by macOS. The StickS3 normally appears as a new USB, Espressif, or `cu.usbmodem` port.
 
 ## First-time Wi-Fi setup
 
-After flashing, configure Wi-Fi in either of these ways:
+After installation, configure Wi-Fi using either of these methods:
 
-- Complete the Improv Serial setup offered by the installer/browser while the device is connected over USB.
-- Connect to the temporary **StickS3 Voice Setup** Wi-Fi network and use its captive portal to enter your network name and password.
+- Use an Improv Serial-compatible client while the device is connected over USB.
+- Connect to the temporary **StickS3 Voice Setup** Wi-Fi network and enter your Wi-Fi name and password through its captive portal.
 
-The setup access point is for provisioning only. It stops being the normal connection after the device successfully joins your Wi-Fi.
+The setup access point is used only for provisioning. After the StickS3 successfully joins your Wi-Fi, it uses the configured network for normal operation.
+
+If the captive portal does not open automatically, connect to **StickS3 Voice Setup** and try:
+
+```text
+http://192.168.4.1/
+```
 
 ## Add to Home Assistant
 
 1. Make sure the StickS3 and Home Assistant can reach each other on the same network.
 2. In Home Assistant, open **Settings → Devices & services**.
-3. Accept the discovered ESPHome device, or select **Add integration → ESPHome** and enter the device hostname or IP address.
-4. Finish the ESPHome pairing flow for your Home Assistant installation.
-5. Configure the Home Assistant Assist pipeline and language you want the voice assistant to use.
+3. Accept the discovered ESPHome device.
+4. If it is not discovered automatically, select **Add integration → ESPHome**.
+5. Enter the StickS3 hostname or IP address.
+6. Complete the ESPHome pairing process.
+7. Select the Home Assistant Assist pipeline and language that the device should use.
 
-No API key belonging to the project author is embedded in the firmware.
+The device hostname normally begins with `sticks3-voice`. A MAC-address suffix is enabled so that multiple devices do not receive conflicting names.
+
+No Home Assistant API key belonging to the project author is embedded in the firmware.
+
+## Wake and use the assistant
+
+After the device is connected to Home Assistant, start the voice assistant in either of these ways:
+
+- Say the wake phrase: `Hey Jarvis`
+- Press the blue front button
+
+The display indicates the current state:
+
+- Listening
+- Thinking
+- Speaking
+
+After the response is complete, the device automatically returns to the robot screen.
 
 ## Build and flash locally
 
-With ESPHome 2026.9.x installed:
+Advanced users can install ESPHome 2026.9.x and run the following command from the project directory:
 
 ```bash
 esphome run sticks3-voice.yaml
@@ -79,23 +162,10 @@ For a compile-only build:
 esphome compile sticks3-voice.yaml
 ```
 
-On first use, ESPHome can provision the device over USB. You can also adopt the device into your own ESPHome Dashboard and maintain your private settings there.
+Local build files are written to the `.esphome` build directory.
 
-## Project files
+The first installation can be performed over USB. After the device joins the network, it can be adopted into a personal ESPHome Dashboard and maintained using OTA updates.
 
-| Path | Purpose |
-| --- | --- |
-| `sticks3-voice.yaml` | ESPHome firmware configuration |
-| `docs/sticks3-hardware.png` | StickS3 hardware reference image used by both READMEs |
-| `site/index.html` | Browser-based installer page |
-| `site/manifest.json` | ESP Web Tools firmware manifest |
-| `.github/workflows/pages.yml` | Automatic firmware build and GitHub Pages deployment |
-| `.gitignore` | Excludes local ESPHome builds, secrets, and generated firmware |
-| `README.md` | English documentation |
-| `README_zh-CN.md` | Simplified Chinese documentation |
+## Automated GitHub Pages deployment
 
-## Notes
-
-- The GitHub Actions workflow is pinned to ESPHome 2026.9.x to keep public builds reproducible.
-- Flashing replaces the firmware currently on the device. Back up any configuration you need first.
-- This is a community project for the specific hardware shown above; it is not a universal firmware image for other ESP32-S3 boards.
+The included GitHub Actions workflow automatically performs the following steps after each push
