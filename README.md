@@ -205,10 +205,4 @@ Regular users do not need to operate GitHub or run the Actions workflow themselv
 
 ## Notes
 
-- The GitHub Actions workflow is pinned to ESPHome 2026.9.x for reproducible public builds.
-- Flashing replaces the firmware currently installed on the device. Back up any configuration you need before installation.
-- The screen shows a battery icon without a numeric percentage.
-- Battery percentage and battery voltage remain available in Home Assistant.
-- Battery percentage is estimated from voltage and is not a precision fuel-gauge measurement.
 - If the battery icon disappears after entering download mode, disconnect USB, double-click the side button to power the device off completely, wait approximately ten seconds, and then press the button once to power it on.
-- This is a community project for the hardware shown above. It is not a universal firmware image for other ESP32-S3 boards.
