@@ -4,7 +4,7 @@
 
 ESPHome voice-assistant firmware made specifically for the **M5Stack StickS3 K150 / StickS3**. This is not a generic ESP32-S3 firmware image and should only be installed on the matching StickS3 hardware.
 
-![M5Stack StickS3 K150 hardware overview](docs/sticks3-hardware.png)
+![M5Stack StickS3 K150 hardware overview](docs/sticks3-banner.png)
 
 ## Features
 
