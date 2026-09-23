@@ -4,7 +4,7 @@
 
 这是专门为 **M5Stack StickS3 K150 / StickS3** 制作的 ESPHome 语音助手固件。它不是通用的 ESP32-S3 固件，请只在对应的 StickS3 硬件上使用。
 
-![M5Stack StickS3 K150 硬件概览](docs/sticks3-hardware.png)
+![M5Stack StickS3 K150 硬件概览](docs/sticks3-banner.png)
 
 ## 功能
 
